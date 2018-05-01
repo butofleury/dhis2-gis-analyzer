@@ -1,0 +1,23 @@
+{
+  "launch_path": "index.html",
+  "default_locale": "en",
+  "activities": {
+    "dhis": {
+      "href": "*",
+      "namespace": "mva-dhis-gis"
+    }
+  },
+  "appType": "APP",
+  "name": "GIS Analyzer",
+  "version": "0.1.0",
+  "description": "Org Unit GIS Checker",
+  "icons": {
+    "48": "icon.png"
+  },
+  "developer": {
+    "name": "Martin Van Aken",
+    "email": "martin@joyouscoding.com"
+  },
+  "launch_url": "index.html",
+  "manifest_generated_at": "Mon Aug 21 2017 11:01:18 GMT+0200 (CEST)"
+}
