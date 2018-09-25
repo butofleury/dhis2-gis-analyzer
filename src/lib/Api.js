@@ -1,6 +1,6 @@
 import { init, getInstance, getManifest } from "d2/lib/d2";
 
-const API_URL = 'https://dhis2.rbf-ng.org/';
+const API_URL = process.env.REACT_APP_DHIS2_URL;
 
 class Api {
   /**
@@ -67,7 +67,7 @@ class Api {
   getOrgUnits() {
     return getInstance().then(d2 =>
       d2.Api.getApi().get(
-        "organisationUnits.json?filter=level:eq:'"+btoa(process.env.REACT_ORG_UNIT_LEVEL)+"'&filter=organisationUnitGroups.id:eq:ai3evGOwuGk&filter=coordinates:!null&fields=id,name,coordinates,ancestors[id,name,coordinates]&pageSize=2000",
+        "organisationUnits.json?filter=level:eq:"+process.env.REACT_APP_ORG_UNIT_LEVEL+"&filter=organisationUnitGroups.id:eq:ai3evGOwuGk&filter=coordinates:!null&fields=id,name,coordinates,ancestors[id,name,coordinates]&pageSize=2000",
       ),
     );
   }
