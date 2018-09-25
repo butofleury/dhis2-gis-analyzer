@@ -40,6 +40,7 @@ class GISTable extends Component {
       { name: "l2", title: "l2" },
       { name: "l3", title: "l3" },
       { name: "l4", title: "l4" },
+      { name: "l5", title: "l5" },
       { name: "id", title: "Id" },
       { name: "name", title: "Name" },
       { name: "gps", title: "GPS" },
@@ -64,7 +65,7 @@ class GISTable extends Component {
   insideMultiPolygon = (point, multipolygon) => {
     let ok = false;
     multipolygon.forEach(poly => {
-      if (inside(point, poly[0])) {
+      if (point!=null && point!='' && inside(point, poly[0])) {
         ok = true;
       }
     });
@@ -81,14 +82,14 @@ class GISTable extends Component {
     this.setState(orgUnits);
     console.log(orgUnits);
     let rows = [];
-    let country = countryRequest.organisationUnits[0];
-    let countryCoords = JSON.parse(country.coordinates);
+    let country = countryRequest.organisationUnits;
+
 
     orgUnits.organisationUnits.forEach(orgUnit => {
-      4;
-
-      let point = JSON.parse(orgUnit.coordinates);
-      let gischeck = this.insideMultiPolygon(point, countryCoords);
+      let point = orgUnit.coordinates !='POINT'  ? JSON.parse(orgUnit.coordinates) : null;
+      let parentCoords = JSON.parse(orgUnit.ancestors[1].coordinates ? orgUnit.ancestors[1].coordinates : orgUnit.ancestors[2].coordinates);
+      
+      let gischeck = this.insideMultiPolygon(point, parentCoords);
       if (gischeck === false) {
         rows.push({
           id: orgUnit.id,
@@ -98,9 +99,10 @@ class GISTable extends Component {
           l2: orgUnit.ancestors[0].name,
           l3: orgUnit.ancestors[1].name,
           l4: orgUnit.ancestors[2].name,
-          link: `http://www.openstreetmap.org/?mlat=${point[0]}&mlon=${
+          l5: orgUnit.ancestors[3].name,
+          link: point ? `http://www.openstreetmap.org/?mlat=${point[0]}&mlon=${
             point[1]
-          }&zoom=6`,
+          }&zoom=6` : '',
         });
       }
     });
