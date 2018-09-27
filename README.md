@@ -6,10 +6,14 @@ This is a simple DHIS2 Application that uses React and D2, the dhis2 javascript 
 
 ## Development
 
-Create a `.env` file with at least the following:
+Create a `.env.development` file with at least the following:
 
     REACT_APP_DHIS2_URL=https://play.dhis2.org/demo
     REACT_APP_BASIC_AUTH=Basic aaabbb
+	REACT_APP_USER=admin
+	REACT_APP_PASSWORD=....
+	REACT_APP_ORG_UNIT_LEVEL=
+
 
 The basic auth should be a correct header for the DHIS2 you are targetting.
 
