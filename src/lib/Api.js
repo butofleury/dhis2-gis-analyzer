@@ -20,10 +20,18 @@ class Api {
    */
   initialize() {
     let headers =
-      process.env.NODE_ENV === "development"
-        ? { Authorization: process.env.REACT_APP_BASIC_AUTH }
+    process.env.NODE_ENV === "development"
+        ? {
+            Authorization:
+              "Basic " +
+              btoa(
+                process.env.REACT_APP_USER +
+                  ":" +
+                  process.env.REACT_APP_PASSWORD
+              )
+          }
         : null;
-    // let headers = process.env.NODE_ENV === 'development' ? { Authorization: 'Basic YWRtaW46ZGlzdHJpY3Q=' } : null;
+
     this.d2 = getManifest("./manifest.webapp")
       .then(manifest => {
         const baseUrl =
@@ -50,16 +58,16 @@ class Api {
   getCountry() {
     return getInstance().then(d2 =>
       d2.Api.getApi().get(
-        "organisationUnits.json?filter=level:eq:1&fields=id,name,coordinates",
+        "organisationUnits.json?filter=level:eq:1&fields=id,name,coordinates&filter=id:eq:I7ca90SJzDy",
       ),
     );
   }
 
   getOrgUnits() {
     return getInstance().then(d2 =>
-      d2.Api.getApi().get(
-        "organisationUnits.json?filter=level:eq:5&filter=coordinates:!null&fields=id,name,coordinates,ancestors[id,name]&pageSize=20000",
-      ),
+       d2.Api.getApi().get(
+         "organisationUnits.json?fields=id,name,coordinates,ancestors[id,name],parent[parent[parent[coordinates]]]&filter=coordinates:!null&filter=level:eq:6&paging=false"
+       )
     );
   }
 

@@ -40,6 +40,8 @@ class GISTable extends Component {
       { name: "l2", title: "l2" },
       { name: "l3", title: "l3" },
       { name: "l4", title: "l4" },
+      { name: "l5", title: "l5" },
+      { name: "l6", title: "l6" },
       { name: "id", title: "Id" },
       { name: "name", title: "Name" },
       { name: "gps", title: "GPS" },
@@ -82,13 +84,28 @@ class GISTable extends Component {
     console.log(orgUnits);
     let rows = [];
     let country = countryRequest.organisationUnits[0];
+    console.info("Country :", country);
     let countryCoords = JSON.parse(country.coordinates);
+    console.info("Country coordinates: ", countryCoords);
 
     orgUnits.organisationUnits.forEach(orgUnit => {
-      4;
+      console.info("Org unit :", orgUnit);
+      
+      
+      let point = orgUnit.coordinates && (orgUnit.coordinates !== "#VALUE!" && orgUnit.coordinates !== "POINT")  ? (JSON.parse(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(_.replace(orgUnit.coordinates, ';', ','), '#VALU', '0'),'--',''), ',.', ','), '-0,', '-0.'), ',29,', ',29.'), '-1,', '-1.'))) : "";
+  
+      //let gischeck = this.insideMultiPolygon(point, countryCoords);
+      let gischeck = false;
+      //Check if the zone coordinates exist and otherwise check on the country coordinates
+      if(_.isEmpty(orgUnit.parent.parent.parent.coordinates)){
+        gischeck = this.insideMultiPolygon(point, countryCoords); 
+      }else{
+        let parentCoordinates = JSON.parse(orgUnit.parent.parent.parent.coordinates);
+        gischeck = this.insideMultiPolygon(point, parentCoordinates);
+      }
+      
+      console.info("GIS check ...:", gischeck);
 
-      let point = JSON.parse(orgUnit.coordinates);
-      let gischeck = this.insideMultiPolygon(point, countryCoords);
       if (gischeck === false) {
         rows.push({
           id: orgUnit.id,
@@ -98,13 +115,16 @@ class GISTable extends Component {
           l2: orgUnit.ancestors[0].name,
           l3: orgUnit.ancestors[1].name,
           l4: orgUnit.ancestors[2].name,
-          link: `http://www.openstreetmap.org/?mlat=${point[0]}&mlon=${
-            point[1]
+          l5: orgUnit.ancestors[3].name,
+          l6: orgUnit.ancestors[4].name,
+          link: `http://www.openstreetmap.org/?mlat=${point[1]}&mlon=${
+            point[0]
           }&zoom=6`,
         });
       }
     });
 
+    console.info("ROWS DATA ...:", rows);
     this.setState({ rows, country });
   }
 
